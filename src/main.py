@@ -1,30 +1,32 @@
+import os
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
+from collections.abc import AsyncGenerator
+from database import get_sqlalchemy_engine, warm_up_connections
+from products.router import products_router
+from config import APP_HOST, APP_PORT
 
-app = FastAPI()
+__version__ = os.environ.get("API_VERSION", "0.1")
 
-@app.get('/')
-async def root():
-    return {"message" : "Hello World"}
+@asynccontextmanager
+async def lifespan(app : FastAPI) -> AsyncGenerator:
+    # add authentication / validation 
+    await warm_up_connections()
+    print(f"Starting enMedD CHP Backend version {__version__} on http://{APP_HOST}:{str(APP_PORT)}/")
+    yield
 
+app = FastAPI(
+        title='Bath & Bark EMS API', version=__version__, lifespan=lifespan
+    )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Change this to the list of allowed origins if needed
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-class Post(BaseModel):
-    post_id : int
-    title : str
-    content : str
-    
-temp_database : Post = []
-
-@app.post('/post')
-async def create_post(req : Post):
-    temp_database.append(req)
-    return {
-        "response" : "success",
-        "posts" : temp_database
-    }
-
-app.put('/post')
-async def update_post(req : Post, post_id : int):
-    for i in temp_database:
-        if post_id == i.post_id
+app.include_router(products_router)

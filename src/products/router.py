@@ -13,11 +13,18 @@ async def get_all_products(count : int = 10) -> list[Products]:
 # TODO: get single product
 @products_router.get('/{id}')
 async def get_product(id : str) -> Products:
-    return {}
+    return {
+        
+    }
 
 # ==== Admin-specific access routes ==== #
 
 # TODO: update a single product
+@products_router.put('/{id}')
+async def update_product(id : str, req : Products):
+    return {
+
+    }
 
 # TODO: delete a single / range of products
 @products_router.delete('/{id}')

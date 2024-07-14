@@ -22,8 +22,8 @@ class Booking(Base):
     user_id = Column(UUID(as_uuid=True), ForeignKey('users.user_id'))  # To be added later
     date_and_time = Column(DateTime, nullable=False)
     reserved_at = Column(DateTime, nullable=False)
-    pet_id = Column(ARRAY(UUID(as_uuid=True)))  # To be added later
     total_price = Column(Numeric, nullable=False)
     
     service = relationship("Service", back_populates="bookings")
     pet = relationship("Pet", back_populates="bookings")
+    users = relationship("Users", back_populates="bookings")

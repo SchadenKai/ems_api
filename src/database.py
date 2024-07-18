@@ -48,8 +48,3 @@ async def warm_up_connections(
 def get_session() -> Generator[Session, None, None]:
     with Session(get_sqlalchemy_engine(), expire_on_commit=False) as session:
         yield session
-
-def get_session_context_manager() -> ContextManager[Session]:
-    return contextlib.contextmanager(get_session)()
-
-

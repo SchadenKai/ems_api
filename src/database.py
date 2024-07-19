@@ -1,11 +1,8 @@
-import contextlib
 from .config import POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_PORT, POSTGRES_DB
 from sqlalchemy.engine import Engine, create_engine
 from sqlalchemy import text
-from typing import ContextManager
 from collections.abc import Generator
-from sqlalchemy.orm import Session
-from sqlalchemy.orm import sessionmaker
+from sqlmodel import Session
 
 SYNC_DB_API = "psycopg2"
 # ASYNC_DB_API = "asyncpg"
@@ -27,20 +24,18 @@ def get_sqlalchemy_engine() -> Engine:
     global _SYNC_ENGINE
     if _SYNC_ENGINE is None:
         connection_string = build_connection_string()
-        _SYNC_ENGINE = create_engine(connection_string, pool_size=40, max_overflow=10, echo=True)
+        _SYNC_ENGINE = create_engine(connection_string, pool_size=40, max_overflow=10)
     return _SYNC_ENGINE
 
 async def warm_up_connections(
     sync_connections_to_warm_up: int = 10
 ) -> None:
-    print("Initializing connection into engine....")
     sync_postgres_engine = get_sqlalchemy_engine()
     print("Connected to the database!")
     connections = [
         sync_postgres_engine.connect() for _ in range(sync_connections_to_warm_up)
     ]
     for conn in connections:
-        print("Warming up the connection pool...")
         conn.execute(text("SELECT 1"))
     for conn in connections:
         conn.close()

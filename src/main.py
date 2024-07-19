@@ -4,16 +4,16 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from collections.abc import AsyncGenerator
-from database import get_sqlalchemy_engine, warm_up_connections
-from products.router import products_router
-from config import APP_HOST, APP_PORT
+from .database import get_sqlalchemy_engine, warm_up_connections
+from .products.router import products_router
+from .config import APP_HOST, APP_PORT
 
 __version__ = os.environ.get("API_VERSION", "0.1")
 
 @asynccontextmanager
 async def lifespan(app : FastAPI) -> AsyncGenerator:
     # add authentication / validation 
-    await warm_up_connections()
+    # await warm_up_connections()
     print(f"Starting enMedD CHP Backend version {__version__} on http://{APP_HOST}:{str(APP_PORT)}/")
     yield
 

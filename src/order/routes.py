@@ -1,6 +1,6 @@
 from .schemas import OrdersCreate
 from src.database import get_session
-from src.models import Orders, OrderItems, Products
+from src.models import Orders, Products
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlmodel import Session, select, delete
 from typing import List, Annotated
@@ -29,8 +29,12 @@ async def place_order(
         status=req.status,
         quantity=req.quantity,
         total_price=req.total_price,
-        order_items=req.order_items
     )
+    for order_item in req.order_items:
+        valid_order_item = Products(
+        )
+        db_session.add(valid_order_item)
+    print("acceptedddddd", req)
     db_session.add(order_data)
     db_session.commit()
     db_session.refresh(order_data)

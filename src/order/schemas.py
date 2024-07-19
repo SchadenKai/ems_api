@@ -18,7 +18,8 @@ class OrderBase(SQLModel):
 
 # only used for validating the request body
 class OrdersCreate(OrderBase):
-    order_items : list["OrderItemCreate"]
+    order_items : list["ProductsBase"] 
+
     @field_validator("status", mode="before")
     def validate_status(cls, v : OrderState):
         if v:
@@ -40,22 +41,3 @@ class OrderUpdate(OrderBase):
     status : Optional[OrderState] = None
     quantity : Annotated[int, Field(gt=0)] | None = None
     total_price : Optional[float] = None
-
-class OrderItemBase(SQLModel):
-    quantity : Annotated[int, Field(gt=0)]
-    total_price : Annotated[float, Field(gt=0)]
-
-class OrderItemCreate(OrderItemBase):
-    product : "ProductsBase"
-    @field_validator("quantity", mode="before")
-    def validate_quantity(cls, v : int):
-        if v < 1:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Quantity must be greater than 0")
-    @field_validator("total_price", mode="before")
-    def validate_total_price(cls, v : float):
-        if v < 0:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Total price must be greater than 0")
-    @field_validator("total_price", mode="after")
-    def validate_total_price(cls, v : float):   
-        if v != cls.product.price * cls.quantity:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Total price must be equal to the product price multiplied by the quantity")

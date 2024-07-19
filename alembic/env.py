@@ -4,6 +4,7 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from src.database import build_connection_string
+from src.models import Users, Pets, Products, PetsBookingsAssociation, Services, Booking, Orders, OrderItems
 from sqlmodel import SQLModel
 
 from alembic import context

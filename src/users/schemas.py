@@ -6,7 +6,7 @@ from typing import Optional
 class SQLModel(SQLModel):
     model_config = ConfigDict(use_enum_values=True)
 
-class Roles(Enum):
+class Roles(str, Enum):
     ADMIN = "admin"
     BASIC = "basic"
 
@@ -19,6 +19,10 @@ class UsersBase(SQLModel):
     phone_number : str
 
 class UsersCreate(UsersBase):
+    @field_validator("role", mode="before")
+    def lower_case_role(cls, v : str):
+        return v.lower()
+
     # this will not be part of the table of users 
     # this is only used to validate the pets data that will be inputted to 
     # the pets table. This is attatched here since pets table are dependent from users table.
@@ -35,8 +39,9 @@ class UsersUpdate(UsersBase):
     password: Optional[str] = None
     address: Optional[str] = None
     phone_number: Optional[str] = None
+    pets : list["PetsBase"] | None = None
 
-class PetTypes(Enum):
+class PetTypes(str, Enum):
     DOG = "dog"
     CAT = "cat"
     BIRD = "bird"
@@ -48,9 +53,8 @@ class PetTypes(Enum):
 
 class PetsBase(SQLModel):
     @field_validator("type", mode="before")
-    async def lower_case_type(cls, value : str) -> str:
+    def lower_case_type(cls, value : str) -> str:
         return value.lower()
-    
     pet_name : str
     age : int 
     type : PetTypes

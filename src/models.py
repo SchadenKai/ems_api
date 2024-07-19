@@ -19,15 +19,15 @@ class PetsBookingsAssociation(SQLModel, table=True):
 class Users(UsersBase, table=True):
     id : int | None = Field(default=None, primary_key=True)
 
-    pets : list["Pets"] = Relationship(back_populates="owner")
-    orders : list["Orders"] = Relationship(back_populates="customer")
-    booking : list["Booking"] = Relationship(back_populates="customer")
+    pets : list["Pets"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="owner")
+    orders : list["Orders"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="customer")
+    booking : list["Booking"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="customer")
 
 class Pets(PetsBase, table=True):
     pet_id : int | None = Field(default=None, primary_key=True)
     owner_id : int = Field(foreign_key="users.id")
     
-    booking : list["Booking"] = Relationship(back_populates="pets", link_model=PetsBookingsAssociation)
+    booking : list["Booking"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="pets", link_model=PetsBookingsAssociation)
     owner : "Users" = Relationship(back_populates="pets")
 
 
@@ -37,7 +37,7 @@ class Products(ProductsBase, table=True):
     product_id : int | None = Field(default=None, primary_key=True)
     last_updated : datetime | None = Field(default=datetime.now(timezone)) 
 
-    order_items : list["OrderItems"] = Relationship(back_populates="product")
+    order_items : list["OrderItems"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="product")
 
 
 # ----- Booking and Services Models -----
@@ -45,7 +45,7 @@ class Products(ProductsBase, table=True):
 class Services(ServicesBase, table=True):
     service_id : int | None = Field(default=None, primary_key=True)
 
-    booking : list["Booking"] = Relationship(back_populates="service")
+    booking : list["Booking"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="service")
 
 class Booking(BookingBase, table=True):
     booking_id : int | None = Field(default=None, primary_key=True)
@@ -53,7 +53,7 @@ class Booking(BookingBase, table=True):
     service_id : int = Field(foreign_key="services.service_id")
     customer_id : int = Field(foreign_key="users.id")
     
-    pets : list["Pets"] = Relationship(back_populates="booking", link_model=PetsBookingsAssociation)
+    pets : list["Pets"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="booking", link_model=PetsBookingsAssociation)
     customer : "Users" = Relationship(back_populates="booking")
     service : "Services" = Relationship(back_populates="booking")
 
@@ -66,7 +66,7 @@ class Orders(OrderBase, table=True):
     customer_id : int = Field(default=None, foreign_key="users.id")
     
     customer : "Users" = Relationship(back_populates="orders")
-    order_items : list["OrderItems"] = Relationship(back_populates="order")
+    order_items : list["OrderItems"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="order")
 
 # one is to one relationship with the products table
 class OrderItems(OrderItemBase, table=True):

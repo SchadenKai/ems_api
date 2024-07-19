@@ -6,7 +6,7 @@ from enum import Enum
 class SQLModelBase(SQLModel):
     model_config = ConfigDict(use_enum_values=True)
 
-class BookingState(Enum):
+class BookingState(str, Enum):
     PENDING = "pending"
     CONFIRMED = "confirmed"
     CANCELLED = "cancelled"

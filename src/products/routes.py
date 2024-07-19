@@ -7,7 +7,7 @@ from src.models import Products
 from datetime import datetime
 from typing import Annotated
 
-products_router = APIRouter(prefix='/products')
+products_router = APIRouter(prefix='/products', tags=["Products"])
 
 
 @products_router.get('/{id}')

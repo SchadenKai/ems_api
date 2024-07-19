@@ -1,6 +1,7 @@
 from pydantic import EmailStr, field_validator, ConfigDict
 from sqlmodel import SQLModel
 from enum import Enum
+from typing import Optional
 
 class SQLModel(SQLModel):
     model_config = ConfigDict(use_enum_values=True)
@@ -25,7 +26,15 @@ class UsersCreate(UsersBase):
     # it is a foreign key)
 
     # required to have a pet
-    pets : list["PetsBase"]
+    pets : list["PetsBase"] | None = None
+
+class UsersUpdate(UsersBase):
+    full_name: Optional[str] = None
+    role: Optional[Roles] = None
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+    address: Optional[str] = None
+    phone_number: Optional[str] = None
 
 class PetTypes(Enum):
     DOG = "dog"

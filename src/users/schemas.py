@@ -1,9 +1,6 @@
-from pydantic import EmailStr, BaseModel, ConfigDict, field_validator
+from pydantic import EmailStr, field_validator, ConfigDict
 from sqlmodel import SQLModel
 from enum import Enum
-
-class BaseModel(BaseModel):
-    model_config = ConfigDict(use_enum_values=True)
 
 class SQLModel(SQLModel):
     model_config = ConfigDict(use_enum_values=True)

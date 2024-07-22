@@ -23,3 +23,8 @@ TimeScheduleObject = {
     "THREE_PM": datetime(datetime.now().year, datetime.now().month, datetime.now().day, 15, 0),
     "FOUR_PM": datetime(datetime.now().year, datetime.now().month, datetime.now().day, 16, 0)
 }
+
+class BookingRange(Enum):
+    TODAY = "today"
+    WEEK = "week"
+    MONTH = "month"

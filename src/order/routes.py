@@ -185,7 +185,7 @@ async def get_all_orders(
 @order_router.delete('/')
 async def delete_order(
     # delete multiple orders ex. /orders?list=1,2,3
-    list : Optional[List[str]] = Query(None),
+    list : List[str] = Query(None),
     db_session : Session = Depends(get_session)
     ):
     if list:
@@ -193,7 +193,7 @@ async def delete_order(
             order = db_session.exec(select(Orders).where(Orders.order_id == order_id)).first()
             if not order:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
-            if order.status == OrderState.CONFIRMED or order.status == OrderState.COMPLETED:
+            if order.status == OrderState.CONFIRMED:
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Order cannot be deleted")
             db_session.delete(order)
         db_session.commit()

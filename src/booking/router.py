@@ -1,7 +1,7 @@
-from datetime import datetime
-from .schemas import BookingBase, BookingCreate, BookingRead, BookingState, ServicesCreate
-from .constants import TimeScheduleObject, TimeSchedule
-from fastapi import APIRouter, Depends, HTTPException, status
+from datetime import date, datetime, timedelta
+from .schemas import BookingBase, BookingCreate, BookingRead, BookingState, BookingUpdate, ServicesCreate
+from .constants import BookingRange
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from src.models import Booking, Pets, Services, Users, PetsBookingsAssociation
 from src.database import get_session
 from sqlmodel import Session, select
@@ -47,7 +47,32 @@ async def add_booking(
     db_session.refresh(booking_db)
     return booking_db
 
-# get all the bookings for that user ? or can be filtered as a query parameter
+# user-specific get bookings route
+@booking_router.get("/user/{user_id}")
+async def get_all_bookings(
+    user_id : int,
+    db_session : Session = Depends(get_session),
+    range : Optional[BookingRange] = Query(None)
+    ) -> List[BookingRead]:
+    if range:
+        if range == BookingRange.TODAY:
+            booking_data = db_session.exec(select(Booking).where(Booking.customer_id == user_id)).all()
+            booking_filtered = [
+                booking for booking in booking_data if booking.reserved_date.date() == date.today()
+            ]
+            return booking_filtered
+        elif range == BookingRange.WEEK:
+            start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
+            end_of_week = start_of_week + timedelta(days=6)
+            booking_data = db_session.exec(select(Booking).where(Booking.reserved_date >= start_of_week, Booking.reserved_date <= end_of_week, Booking.customer_id == user_id)).all()
+            return booking_data
+        elif range == BookingRange.MONTH:
+            start_of_month = datetime.now().date().replace(day=1)
+            end_of_month = start_of_month + timedelta(days=30)
+            booking_data = db_session.exec(select(Booking).where(Booking.reserved_date >= start_of_month, Booking.reserved_date <= end_of_month, Booking.customer_id == user_id)).all()
+            return booking_data
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid range")
+
 
 # ==== Admin-specific access routes ==== #
 
@@ -69,12 +94,59 @@ async def add_service(
     db_session.refresh(service_data)
     return service_data
 
-# TODO: update booking status - if done / cancelled / rescheduled / placed
+@booking_router.put("/status/{booking_id}")
+async def update_booking_status(
+    booking_id : int,
+    booking : BookingUpdate,
+    db_session : Session = Depends(get_session)
+    ) -> BookingRead:
+    booking_data = db_session.exec(select(Booking).where(Booking.booking_id == booking_id)).first()
+    if not booking_data:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Booking not found")
+    booking_data.status = booking.status
+    db_session.add(booking_data)
+    db_session.commit()
+    db_session.refresh(booking_data)
+    return booking_data
 
-# TODO: delete booking if the booking is cancelled, completed, or pending
+@booking_router.delete("/")
+async def delete_booking(
+    list : List[str],
+    db_session : Session = Depends(get_session)
+    ) -> BookingRead:
+    for booking_id in list:
+        booking_data = db_session.exec(select(Booking).where(Booking.booking_id == booking_id)).first()
+        if not booking_data:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Booking not found")
+        if booking_data.status == BookingState.CONFIRMED:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Booking cannot be deleted if it is confirmed")
+        db_session.delete(booking_data)
+        db_session.commit()
+    return {
+        "status" : HTTPException(status_code=status.HTTP_200_OK, detail="Booking deleted")
+    }
 
-# TODO: when the booking status is updated it will notify the basic users
-# through webhooks 
-
-# TODO: get all the booking depending on range 
 # this day / this week / this month
+@booking_router.get("/")
+async def get_all_bookings(
+    db_session : Session = Depends(get_session),
+    range : Optional[BookingRange] = Query(None)
+    ) -> List[BookingRead]:
+    if range:
+        if range == BookingRange.TODAY:
+            booking_data = db_session.exec(select(Booking)).all()
+            booking_filtered = [
+                booking for booking in booking_data if booking.reserved_date.date() == date.today()
+            ]
+            return booking_filtered
+        elif range == BookingRange.WEEK:
+            start_of_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
+            end_of_week = start_of_week + timedelta(days=6)
+            booking_data = db_session.exec(select(Booking).where(Booking.reserved_date >= start_of_week, Booking.reserved_date <= end_of_week)).all()
+            return booking_data
+        elif range == BookingRange.MONTH:
+            start_of_month = datetime.now().date().replace(day=1)
+            end_of_month = start_of_month + timedelta(days=30)
+            booking_data = db_session.exec(select(Booking).where(Booking.reserved_date >= start_of_month, Booking.reserved_date <= end_of_month)).all()
+            return booking_data
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid range")

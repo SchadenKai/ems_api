@@ -141,9 +141,12 @@ Content-Type: application/json
   "customer_id": 6,
   "total_price": 140,
   "service_id": 1,
-  "reserved_day" : "2024-07-22",
+  "reserved_day" : "2024-07-23",
   "reserved_time" : "10:00:00",
   "booking_items_link" : [
+    {
+      "pet_id" : 5
+    },
     {
       "pet_id" : 4
     }
@@ -159,3 +162,9 @@ Content-Type: application/json
   "price" : 250,
   "duration" : 1
 }
+
+### - Passed the test
+GET http://localhost:8000/booking/?range=month
+
+### - Passed the test
+GET http://localhost:8000/booking/user/6?range=week

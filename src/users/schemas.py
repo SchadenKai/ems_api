@@ -22,7 +22,9 @@ class UsersCreate(UsersBase):
     @field_validator("role", mode="before")
     def lower_case_role(cls, v : str):
         return v.lower()
-
+    @field_validator("full_name", mode="before")
+    def capitalize_name(cls, v : str):
+        return v.title()
     # this will not be part of the table of users 
     # this is only used to validate the pets data that will be inputted to 
     # the pets table. This is attatched here since pets table are dependent from users table.
@@ -30,6 +32,7 @@ class UsersCreate(UsersBase):
     # it is a foreign key)
 
     # required to have a pet
+    # creation of pets will be done rather than referencing id's of the pets
     pets : list["PetsBase"] | None = None
 
 class UsersUpdate(UsersBase):
@@ -40,6 +43,18 @@ class UsersUpdate(UsersBase):
     address: Optional[str] = None
     phone_number: Optional[str] = None
     pets : list["PetsBase"] | None = None
+
+class UsersRead(UsersBase):
+    @field_validator("role", mode="before")
+    def lower_case_role(cls, v : str):
+        return v.lower()
+    full_name : str
+    role : Roles
+    email : EmailStr
+    address : str
+    phone_number : str
+    pets : list["PetsBase"] | None = None
+    password : Optional[str] = None
 
 class PetTypes(str, Enum):
     DOG = "dog"
@@ -59,3 +74,6 @@ class PetsBase(SQLModel):
     age : int 
     type : PetTypes
     breed : str
+
+class PetsCreate(PetsBase):
+    owner_id : int

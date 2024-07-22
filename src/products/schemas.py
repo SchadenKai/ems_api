@@ -1,9 +1,9 @@
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel
 from pydantic import field_validator
 from typing import Optional
 
 class ProductsBase(SQLModel):
-    product_name : str = Field(unique=True)
+    product_name : str
     price : float
     stock : int
     

@@ -16,7 +16,7 @@ __version__ = os.environ.get("API_VERSION", "0.1")
 async def lifespan(app : FastAPI) -> AsyncGenerator:
     # add authentication / validation 
     # await warm_up_connections()
-    print(f"Starting enMedD CHP Backend version {__version__} on http://{APP_HOST}:{str(APP_PORT)}/")
+    print(f"Starting Ecommerce Management System version {__version__} on http://{APP_HOST}:{str(APP_PORT)}/")
     yield
 
 app = FastAPI(

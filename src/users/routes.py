@@ -1,4 +1,4 @@
-from .schemas import UsersCreate, UsersUpdate, Roles
+from .schemas import PetsCreate, UsersCreate, UsersRead, UsersUpdate, Roles, PetsBase
 from src.models import Users, Pets
 from fastapi import APIRouter, HTTPException, status, Depends, Query
 from sqlalchemy.exc import SQLAlchemyError
@@ -82,7 +82,7 @@ async def update_user(
                 age=pet.age,
                 type=pet.type,
                 breed=pet.breed,
-                owner=user
+                owner_id=user.id
             )
             db_session.add(pet_obj)
     
@@ -107,13 +107,52 @@ async def delete_user(
         "status": status.HTTP_200_OK
     }
 
+@users_router.post('/pets')
+async def create_pet(
+    pet : PetsCreate,
+    db_session: Session = Depends(get_session)
+) -> Pets:
+    db_user = db_session.exec(select(Users).where(Users.id == pet.owner_id)).first()
+    if not db_user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    pet = Pets(
+        pet_name=pet.pet_name,
+        age=pet.age,
+        type=pet.type,
+        breed=pet.breed,
+        owner_id=pet.owner_id
+    )
+    db_session.add(pet)
+    db_session.commit()
+    db_session.refresh(pet)
+    return pet
+
 # ==== Admin-specific access routes ==== #
 
 @users_router.get('/')
 async def get_all_users(
     role : Roles | None = None,
     db_session: Session = Depends(get_session)
-) -> list[Users] :
+) -> list[UsersRead] :
     statement = select(Users).where(Users.role == role) if role is not None else select(Users)
-    result : list[Users] = db_session.exec(statement).all()
-    return result
+    db_results = db_session.exec(statement).all()
+    if not db_results:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No users found")
+    db_results = [
+        UsersRead(
+        full_name=user.full_name,
+        role=user.role,
+        email=user.email,
+        address=user.address,
+        phone_number=user.phone_number,
+        pets = [
+            PetsBase(
+            pet_name=pet.pet_name,
+            age=pet.age,
+            type=pet.type,
+            breed=pet.breed
+            ) for pet in user.pets
+        ]
+        ) for user in db_results
+    ]        
+    return db_results

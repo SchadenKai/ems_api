@@ -1,0 +1,105 @@
+products:
+  - product_name: "Carrier (Small)"
+    price: 950
+    stock: 100
+  - product_name: "Training Leash (Medium)"
+    price: 140
+    stock: 100
+  - product_name: "Training Leash (X-Large)"
+    price: 100
+    stock: 100
+  - product_name: "Harness with Leach Printed (Small)"
+    price: 80
+    stock: 100
+  - product_name: "Vitality (Adult)"
+    price: 190
+    stock: 100
+  - product_name: "Vitality (Puppy)"
+    price: 210
+    stock: 100
+  - product_name: "CIAO POUCH (40g)"
+    price: 35
+    stock: 100
+  - product_name: "CIAO CHURU (all flavors)"
+    price: 25
+    stock: 100
+  - product_name: "Cat Collar"
+    price: 150
+    stock: 100
+  - product_name: "PAMPERED POOCH (COLOGNE) all scent"
+    price: 320
+    stock: 100
+  - product_name: "John's Farm (Jerky)"
+    price: 220
+    stock: 100
+  - product_name: "Saint Roche (Basic Dog Shampoo)"
+    price: 480
+    stock: 100
+  - product_name: "Squeak Bone"
+    price: 200
+    stock: 100
+  - product_name: "Diner Tasty (Bone Small)"
+    price: 130
+    stock: 100
+  - product_name: "Diaper (Large)"
+    price: 50
+    stock: 100
+  - product_name: "Diaper (X-Large)"
+    price: 45
+    stock: 100
+  - product_name: "Vaccination Card"
+    price: 50
+    stock: 100
+  - product_name: "VENOMA Wound Spray"
+    price: 350
+    stock: 100
+  - product_name: "Topi-derm wound cream"
+    price: 320
+    stock: 100
+  - product_name: "Papi MVP (Multivitamins)"
+    price: 280
+    stock: 100
+
+services:
+  - service_name: "Deworming (<10kg)"
+    price: 250
+    duration: 1
+  - service_name: "Vaccination 4in1"
+    price: 850
+    duration: 1
+  - service_name: "Vaccination 5in1"
+    price: 450
+    duration: 1
+  - service_name: "Vaccination 6in1"
+    price: 650
+    duration: 1
+  - service_name: "Vaccination Anti Rabies"
+    price: 350
+    duration: 1
+  - service_name: "Vaccination Kennel Cough Consultation"
+    price: 550
+    duration: 1
+  - service_name: "Consultation"
+    price: 400
+    duration: 1
+  - service_name: "Full Grooming < 4kg"
+    price: 500
+    duration: 1
+  - service_name: "Full Grooming 4-8kg"
+    price: 600
+    duration: 1
+  - service_name: "Full Grooming 8-12kg"
+    price: 700
+    duration: 1
+  - service_name: "Full Grooming 12-16kg"
+    price: 800
+    duration: 1
+  - service_name: "Full Grooming 16-20kg"
+    price: 900
+    duration: 1
+  - service_name: "Full Grooming 20-25kg"
+    price: 1000
+    duration: 1
+  - service_name: "Full Grooming >25kg"
+    price: 1100
+    duration: 1

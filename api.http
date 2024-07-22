@@ -132,7 +132,7 @@ Content-Type: application/json
 DELETE http://localhost:8000/orders/?list=7&list=8
 Content-Type: application/json
 
-###
+### - Passed the test
 POST http://localhost:8000/booking
 Content-Type: application/json
 
@@ -143,7 +143,7 @@ Content-Type: application/json
   "service_id": 1,
   "reserved_day" : "2024-07-22",
   "reserved_time" : "10:00:00",
-  "booking_pets_link" : [
+  "booking_items_link" : [
     {
       "pet_id" : 4
     }

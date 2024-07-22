@@ -8,6 +8,7 @@ from .database import get_sqlalchemy_engine, warm_up_connections
 from .products.routes import products_router
 from .users.routes import users_router
 from .order.routes import order_router
+from .booking.router import booking_router
 from .config import APP_HOST, APP_PORT
 
 __version__ = os.environ.get("API_VERSION", "0.1")
@@ -34,3 +35,4 @@ app.add_middleware(
 app.include_router(products_router)
 app.include_router(users_router)
 app.include_router(order_router)
+app.include_router(booking_router)

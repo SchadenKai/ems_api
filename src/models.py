@@ -2,7 +2,7 @@ from src.users.schemas import UsersBase, PetsBase
 from sqlmodel import Field, Relationship, SQLModel
 from src.order.schemas import OrderBase, OrderProductAssociationBase
 from src.products.schemas import ProductsBase
-from src.booking.schemas import ServicesBase, BookingBase
+from src.booking.schemas import BookingState, ServicesBase, BookingBase, PetsBookingsAssociation
 from datetime import datetime
 import pytz
 
@@ -10,9 +10,12 @@ timezone = pytz.timezone("Asia/Manila")
 
 # ---- Link Tables ------
 
-class PetsBookingsAssociation(SQLModel, table=True):
+class PetsBookingsAssociation(PetsBookingsAssociation, table=True):
     pet_id : int = Field(foreign_key="pets.pet_id", primary_key=True)
     booking_id : int = Field(foreign_key="booking.booking_id", primary_key=True)
+
+    booking : "Booking" = Relationship(back_populates="booking_items_link")
+    pet : "Pets" = Relationship(back_populates="pets_items_link")
 
 class OrderProductAssociation(OrderProductAssociationBase, table=True):
     order_id : int = Field(foreign_key="orders.order_id", primary_key=True)
@@ -35,7 +38,8 @@ class Pets(PetsBase, table=True):
     pet_id : int | None = Field(default=None, primary_key=True)
     owner_id : int = Field(foreign_key="users.id")
     
-    booking : list["Booking"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="pets", link_model=PetsBookingsAssociation)
+    pets_items_link : list["PetsBookingsAssociation"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="pet")
+    # booking : list["Booking"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="pets", link_model=PetsBookingsAssociation)
     owner : "Users" = Relationship(back_populates="pets")
 
 # ----- Products Models -----
@@ -57,12 +61,14 @@ class Services(ServicesBase, table=True):
     booking : list["Booking"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="service")
 
 class Booking(BookingBase, table=True):
+    status : BookingState | None = Field(default=BookingState.PENDING)
     booking_id : int | None = Field(default=None, primary_key=True)
     reserved_date : datetime| None = Field(nullable=False)
     service_id : int = Field(foreign_key="services.service_id")
     customer_id : int = Field(foreign_key="users.id")
-    
-    pets : list["Pets"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="booking", link_model=PetsBookingsAssociation)
+
+    booking_items_link : list["PetsBookingsAssociation"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="booking")
+    # pets : list["Pets"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="booking", link_model=PetsBookingsAssociation)
     customer : "Users" = Relationship(back_populates="booking")
     service : "Services" = Relationship(back_populates="booking")
 

@@ -64,7 +64,8 @@ async def place_order(
         status=req.status,
         quantity=req.quantity,
         total_price=req.total_price,
-        customer_id=req.customer_id
+        customer_id=req.customer_id,
+        order_date=req.order_date
     )
     db_session.add(order_data)
     db_session.commit()

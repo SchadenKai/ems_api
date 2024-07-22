@@ -31,6 +31,7 @@ class OrdersCreate(OrderBase):
     total_price : float
     customer_id  : int
     product_items_link : list[OrderProductAssociationBase]
+    order_date : None | datetime = datetime.now()
     
     @field_validator("status", mode="before")
     def validate_status(cls, v : OrderState):
@@ -58,4 +59,4 @@ class OrderUpdate(OrderBase):
 class OrderRead(OrderBase):
     order_id : int
     product_items_link : list[OrderProductAssociationBase] | None = None
-    order_date : datetime | None = None
+    order_date : datetime 

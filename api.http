@@ -7,22 +7,127 @@ Content-Type: application/json
   "stock": 10
 }
 
-###
-GET http://localhost:8000/products/1
+### - Passed the test
+GET http://localhost:8000/products/7
 Content-Type: application/json
 
-###
+### - Passed the test
 GET http://localhost:8000/products
 Content-Type: application/json
 
-###
-PUT http://localhost:8000/products/1
+### - Passed the test
+PUT http://localhost:8000/products/7
 Content-Type: application/json
 
 {
-  "stock" : 8
+  "stock" : 100
 }
 
-###
+### - Passed the test
 DELETE http://localhost:8000/products/1
+Content-Type: application/json
+
+### - Passed the test
+POST http://localhost:8000/users
+Content-Type: application/json
+
+{
+  "full_name": "Admin Access",
+  "email": "adminaccess@gmail.com",
+  "role" : "admin",
+  "password": "admin123",
+  "address" : "Jl. Raya Kuta No. 1",
+  "phone_number" : "081234567890",
+  "pets" : [
+    {
+      "pet_name" : "Bobby",
+      "type" : "Dog",
+      "age" : 2,
+      "breed" : "Golden Retriever"
+    },
+    {
+      "pet_name" : "Kopi",
+      "type" : "Dog",
+      "age" : 1,
+      "breed" : "Aspin mix breed"
+    }
+  ]
+}
+
+### - Passed the test
+POST http://localhost:8000/users/pets
+Content-Type: application/json
+
+{
+  "pet_name" : "Happy",
+  "type" : "Cat",
+  "age" : 2,
+  "breed" : "Puspin",
+  "owner_id" : 6
+}
+
+### - Passed the test
+GET http://localhost:8000/users
+Content-Type: application/json
+
+### - Passed the test
+PUT http://localhost:8000/users/6
+Content-Type: application/json
+
+{
+  "address": "Brgy. San Jose, San Luis, Batangas"
+}
+
+### - Passed the test
+POST http://localhost:8000/orders
+Content-Type: application/json
+
+{
+  "status": "pending",
+  "customer_id": 6,
+  "total_price": 140,
+  "quantity": 1,
+  "product_items_link" : [
+    {
+      "product_id" : 7,
+      "quantity" : 2
+    }
+  ]
+}
+
+### - Passed the test
+PUT http://localhost:8000/orders/status/5
+Content-Type: application/json
+
+{
+  "status": "confirmed"
+}
+
+### - Passed the test
+PUT http://localhost:8000/orders/12
+Content-Type: application/json
+
+{
+  "product_items_link" : [
+    {
+      "product_id" : 7,
+      "quantity" : 1
+    }
+  ]
+}
+
+### - Passed the test
+PUT http://localhost:8000/orders/cancel/5
+Content-Type: application/json
+
+### - Passed the test
+GET http://localhost:8000/orders/6
+Content-Type: application/json
+
+### - Passed the test
+GET http://localhost:8000/orders
+Content-Type: application/json
+
+### - Passed the test
+DELETE http://localhost:8000/orders/?list=7&list=8
 Content-Type: application/json

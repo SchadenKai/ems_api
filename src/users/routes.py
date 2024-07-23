@@ -82,6 +82,7 @@ async def update_user(
                 age=pet.age,
                 type=pet.type,
                 breed=pet.breed,
+                gender=pet.gender,
                 owner_id=user.id
             )
             db_session.add(pet_obj)
@@ -120,6 +121,7 @@ async def create_pet(
         age=pet.age,
         type=pet.type,
         breed=pet.breed,
+        gender=pet.gender,
         owner_id=pet.owner_id
     )
     db_session.add(pet)

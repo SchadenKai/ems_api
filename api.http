@@ -72,11 +72,20 @@ GET http://localhost:8000/users
 Content-Type: application/json
 
 ### - Passed the test
-PUT http://localhost:8000/users/6
+PUT http://localhost:8000/users/41
 Content-Type: application/json
+Authorization: 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
 
 {
-  "password" : "admin123"
+  "pets" : [
+    {
+      "pet_name" : "Happy",
+      "type" : "Cat",
+      "age" : 2,
+      "breed" : "Puspin",
+      "gender" : "male"
+    }
+  ]
 }
 
 ### - Passed the test

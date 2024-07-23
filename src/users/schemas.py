@@ -93,6 +93,9 @@ class PetsBase(SQLModel):
     @field_validator("type", mode="before")
     def lower_case_type(cls, value : str) -> str:
         return value.lower()
+    @field_validator("gender", mode="before")
+    def lower_case_gender(cls, value : str) -> str:
+        return value.lower()
     pet_name : str
     age : int 
     type : PetTypes

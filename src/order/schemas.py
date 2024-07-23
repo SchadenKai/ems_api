@@ -2,7 +2,6 @@ from datetime import datetime
 from fastapi import HTTPException, status
 from pydantic import ConfigDict, field_validator
 from sqlmodel import SQLModel, Field
-from src.users.schemas import UsersBase
 from enum import Enum
 from typing import Optional, Annotated
 

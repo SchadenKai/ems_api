@@ -1,6 +1,8 @@
 from pydantic import EmailStr, field_validator, ConfigDict, BaseModel
 import hashlib
-from src.users.schemas import UsersRead
+from src.booking.schemas import BookingBase
+from src.order.schemas import OrderBase
+from src.users.schemas import UsersRead, PetsBase
 
 
 class LoginBase(BaseModel):

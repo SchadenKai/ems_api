@@ -1,7 +1,8 @@
-from pydantic import EmailStr, field_validator, ConfigDict
+from pydantic import EmailStr, Field, field_validator, ConfigDict
 from sqlmodel import SQLModel
 from enum import Enum
 from typing import Optional
+import hashlib
 
 class SQLModel(SQLModel):
     model_config = ConfigDict(use_enum_values=True)
@@ -25,6 +26,9 @@ class UsersCreate(UsersBase):
     @field_validator("full_name", mode="before")
     def capitalize_name(cls, v : str):
         return v.title()
+    @field_validator("password", mode="after")
+    def hash_password(cls, v : str):
+        return hashlib.sha256(v.encode()).hexdigest()
     # this will not be part of the table of users 
     # this is only used to validate the pets data that will be inputted to 
     # the pets table. This is attatched here since pets table are dependent from users table.
@@ -36,6 +40,15 @@ class UsersCreate(UsersBase):
     pets : list["PetsBase"] | None = None
 
 class UsersUpdate(UsersBase):
+    @field_validator("role", mode="before")
+    def lower_case_role(cls, v : str):
+        return v.lower()
+    @field_validator("full_name", mode="before")
+    def capitalize_name(cls, v : str):
+        return v.title()
+    @field_validator("password", mode="after")
+    def hash_password(cls, v : str):
+        return hashlib.sha256(v.encode()).hexdigest()
     full_name: Optional[str] = None
     role: Optional[Roles] = None
     email: Optional[EmailStr] = None
@@ -54,7 +67,8 @@ class UsersRead(UsersBase):
     address : str
     phone_number : str
     pets : list["PetsBase"] | None = None
-    password : Optional[str] = None
+    password : str = Field(None, exclude=True)
+    id : int | None = None
 
 class PetTypes(str, Enum):
     DOG = "dog"

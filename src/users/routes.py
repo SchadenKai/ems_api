@@ -95,7 +95,7 @@ async def update_user(
 async def delete_user(
     id : int,
     db_session: Session = Depends(get_session)
-) -> Users :
+) :
     statement = select(Users).where(Users.id == id)
     user = db_session.exec(statement).one_or_none()
     if user is None:

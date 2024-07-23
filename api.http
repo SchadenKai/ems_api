@@ -75,7 +75,7 @@ PUT http://localhost:8000/users/6
 Content-Type: application/json
 
 {
-  "address": "Brgy. San Jose, San Luis, Batangas"
+  "password" : "admin123"
 }
 
 ### - Passed the test
@@ -94,6 +94,9 @@ Content-Type: application/json
     }
   ]
 }
+
+### - Passed the test
+DELETE http://localhost:8000/users/7
 
 ### - Passed the test
 PUT http://localhost:8000/orders/status/5
@@ -168,3 +171,33 @@ GET http://localhost:8000/booking/?range=month
 
 ### - Passed the test
 GET http://localhost:8000/booking/user/6?range=week
+
+### - Passed the test
+POST http://localhost:8000/auth/login
+Content-Type: application/json
+
+{
+  "email": "adminaccess@gmail.com",
+  "password": "admin123"
+}
+
+### - Passed the test
+POST http://localhost:8000/auth/register
+Content-Type: application/json
+
+{
+  "full_name": "Kairus Tecson",
+  "email": "kairustecsonpersonal@gmail.com",
+  "password": "kairus123",
+  "address" : "Jl. Raya Kuta No. 1",
+  "phone_number" : "09234567890",
+  "role" : "basic",
+  "pets" : [
+    {
+      "pet_name" : "Bobby",
+      "type" : "Dog",
+      "age" : 2,
+      "breed" : "Golden Retriever"
+    }
+  ]
+}

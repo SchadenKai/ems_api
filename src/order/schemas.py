@@ -5,6 +5,8 @@ from sqlmodel import SQLModel, Field
 from enum import Enum
 from typing import Optional, Annotated
 
+from src.products.schemas import ProductsBase
+
 class OrderState(str, Enum):
     PENDING = "pending"
     CONFIRMED = "confirmed"
@@ -55,7 +57,10 @@ class OrderUpdate(OrderBase):
     total_price : Optional[float] = None
     product_items_link : Optional[list[OrderProductAssociationBase]] = None
 
+class OrderProductAssociationRead(OrderProductAssociationBase):
+    product : ProductsBase
+
 class OrderRead(OrderBase):
     order_id : int
-    product_items_link : list[OrderProductAssociationBase] | None = None
+    product_items_link : list[OrderProductAssociationRead] | None = None
     order_date : datetime 

@@ -6,6 +6,8 @@ from sqlmodel import SQLModel, Field
 from enum import Enum
 from datetime import date, time
 
+# from src.users.schemas import PetsRead
+
 class SQLModelBase(SQLModel):
     model_config = ConfigDict(use_enum_values=True)
 
@@ -60,9 +62,11 @@ class BookingCreate(BookingBase):
     booking_items_link : list[PetsBookingsAssociation]
     reserved_day : date
     reserved_time : time
+
 class BookingRead(BookingBase):
     customer_id : int
     service_id : int
+    service : ServicesBase
     booking_items_link : list[PetsBookingsAssociation] | None = None
     reserved_date : datetime 
 

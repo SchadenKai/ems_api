@@ -1,5 +1,5 @@
 from datetime import date, datetime, timedelta
-from .schemas import BookingBase, BookingCreate, BookingRead, BookingState, BookingUpdate, ServicesCreate
+from .schemas import BookingBase, BookingCreate, BookingRead, BookingState, BookingUpdate, ServicesCreate, ServicesRead
 from .constants import BookingRange
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from src.models import Booking, Pets, Services, Users, PetsBookingsAssociation
@@ -150,3 +150,11 @@ async def get_all_bookings(
             booking_data = db_session.exec(select(Booking).where(Booking.reserved_date >= start_of_month, Booking.reserved_date <= end_of_month)).all()
             return booking_data
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid range")
+
+## Get all services
+@booking_router.get("/services")
+async def get_all_services(
+    db_session : Session = Depends(get_session)
+    ) -> List[ServicesRead]:
+    service_data = db_session.exec(select(Services)).all()
+    return service_data

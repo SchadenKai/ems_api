@@ -30,7 +30,13 @@ class ServicesCreate(ServicesBase):
     @field_validator("service_name", mode="before")
     def transform_service_name(cls, v : str):
         return v.lower()
+    
+class ServicesRead(ServicesBase):
+    pass
 
+class ServicesReadAdmin(ServicesBase):
+    booking : list["BookingRead"] | None = None
+    
 class BookingBase(SQLModel):
     class Config:
         underscore_attrs_are_private = True

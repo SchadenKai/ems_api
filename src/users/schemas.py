@@ -85,6 +85,10 @@ class PetTypes(str, Enum):
     HEDGEHOG = "hedgehog"
     OTHERS = "others"
 
+class PetsGender(str, Enum):
+    FEMALE = "female"
+    MALE = "male"
+
 class PetsBase(SQLModel):
     @field_validator("type", mode="before")
     def lower_case_type(cls, value : str) -> str:
@@ -93,6 +97,7 @@ class PetsBase(SQLModel):
     age : int 
     type : PetTypes
     breed : str
+    gender : PetsGender
 
 class PetsCreate(PetsBase):
     owner_id : int

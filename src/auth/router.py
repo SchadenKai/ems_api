@@ -5,8 +5,9 @@ from sqlmodel import Session, select
 from pydantic import EmailStr
 from typing import List, Optional, Annotated
 from src.users.schemas import UsersBase, UsersCreate, UsersRead, UsersUpdate, Roles
-from .schemas import LoginBase
+from .schemas import LoginBase, LoginRead
 from sqlalchemy.exc import SQLAlchemyError
+import os
 
 auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -14,7 +15,7 @@ auth_router = APIRouter(prefix="/auth", tags=["auth"])
 async def register(
     req : UsersCreate,
     db_session : Session = Depends(get_session)
-    ) -> UsersRead:
+    ) -> LoginRead:
     try: 
         user = Users(
             full_name=req.full_name,
@@ -37,7 +38,10 @@ async def register(
         db_session.add(user)
         db_session.commit()
         db_session.refresh(user)
-        return user
+        return {
+            "token" : os.urandom(32).hex(),
+            "user" : user
+        }
     except SQLAlchemyError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
@@ -45,12 +49,13 @@ async def register(
 async def login(
     payload : LoginBase,
     db_session : Session = Depends(get_session)
-    ) -> UsersRead:
-    print(payload.password)
-    print(f"datatype : {type(payload.password)}")
+    ) -> LoginRead:
     user = db_session.exec(select(Users).where(Users.email == payload.email)).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     if user.password != payload.password:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
-    return user
+    return {
+        "token" : os.urandom(32).hex(),
+        "user" : user
+    }

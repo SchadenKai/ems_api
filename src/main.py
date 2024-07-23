@@ -11,6 +11,8 @@ from .order.routes import order_router
 from .booking.router import booking_router
 from .auth.router import auth_router
 from .config import APP_HOST, APP_PORT
+from .auth.services import AuthMiddleware
+
 
 __version__ = os.environ.get("API_VERSION", "0.1")
 
@@ -24,6 +26,10 @@ async def lifespan(app : FastAPI) -> AsyncGenerator:
 app = FastAPI(
         title='Bath & Bark EMS API', version=__version__, lifespan=lifespan
     )
+
+### add middleware for authentication system
+
+app.add_middleware(AuthMiddleware)
 
 app.add_middleware(
     CORSMiddleware,

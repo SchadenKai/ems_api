@@ -1,6 +1,6 @@
 from pydantic import EmailStr, field_validator, ConfigDict, BaseModel
 import hashlib
-# from src.users.schemas import UsersBase
+from src.users.schemas import UsersRead
 
 
 class LoginBase(BaseModel):
@@ -13,3 +13,7 @@ class LoginBase(BaseModel):
     @field_validator("password", mode="after")
     def hash_password(cls, v : str):
         return hashlib.sha256(v.encode()).hexdigest()
+    
+class LoginRead(BaseModel):
+    token : str
+    user : UsersRead

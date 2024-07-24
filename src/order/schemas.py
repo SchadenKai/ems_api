@@ -6,6 +6,7 @@ from enum import Enum
 from typing import Optional, Annotated
 
 from src.products.schemas import ProductsBase
+from src.users.schemas import UsersBase, UsersRead
 
 class OrderState(str, Enum):
     PENDING = "pending"
@@ -64,3 +65,5 @@ class OrderRead(OrderBase):
     order_id : int
     product_items_link : list[OrderProductAssociationRead] | None = None
     order_date : datetime 
+    customer : UsersBase | None = None
+    

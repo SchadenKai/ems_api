@@ -163,23 +163,8 @@ async def get_all_orders(
         orders_db = db_session.exec(select(Orders).where(Orders.status == status)).all()
     else:
         orders_db = db_session.exec(select(Orders)).all() 
-    orders = [
-        OrderRead(
-            order_id=order.order_id,
-            status=order.status,
-            quantity=order.quantity,
-            total_price=order.total_price,
-            customer_id=order.customer_id,
-            order_date=order.order_date,
-            product_items_link=[
-                OrderProductAssociation(
-                    product_id=product.product_id,
-                    quantity=product.quantity
-                ) for product in order.product_items_link
-            ],
-        ) for order in orders_db
-    ]
-    return orders[:limit] if limit is not None else orders
+    orders = orders_db[:limit] if limit is not None else orders_db
+    return orders
 
 # Delete order only if the order status is pending or cancelled
 @order_router.delete('/')

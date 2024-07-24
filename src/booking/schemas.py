@@ -6,6 +6,8 @@ from sqlmodel import SQLModel, Field
 from enum import Enum
 from datetime import date, time
 
+from src.users.schemas import PetsRead
+
 # from src.users.schemas import PetsRead
 
 class SQLModelBase(SQLModel):
@@ -20,6 +22,9 @@ class BookingState(str, Enum):
 class PetsBookingsAssociation(SQLModel):
     pet_id : int
 
+class PetsBookingsAssociationRead(PetsBookingsAssociation):
+    pet : "PetsRead"
+
 class ServicesBase(SQLModel):
     service_name : str
     price : float
@@ -32,9 +37,10 @@ class ServicesCreate(ServicesBase):
         return v.lower()
     
 class ServicesRead(ServicesBase):
-    pass
+    service_id : int
 
 class ServicesReadAdmin(ServicesBase):
+    service_id : int
     booking : list["BookingRead"] | None = None
     
 class BookingBase(SQLModel):
@@ -58,7 +64,7 @@ class BookingRead(BookingBase):
     customer_id : int
     service_id : int
     service : ServicesBase
-    booking_items_link : list[PetsBookingsAssociation] | None = None
+    booking_items_link : list[PetsBookingsAssociationRead] | None = None
     reserved_date : datetime 
 
 class BookingUpdate(BookingBase):

@@ -12,7 +12,7 @@ users_router = APIRouter(prefix='/users', tags=['Users'])
 async def get_user_profile(
     id : int,
     db_session: Session = Depends(get_session)
-) -> Users :
+) -> UsersRead :
     statement = select(Users).where(Users.id == id)
     result : Users | None = db_session.exec(statement).one_or_none()
     if result is None:

@@ -108,6 +108,8 @@ Content-Type: application/json
 ### - Passed the test
 DELETE http://localhost:8000/users/7
 
+# ------------------------ ORDER API ------------------------
+
 ### - Passed the test
 PUT http://localhost:8000/orders/status/5
 Content-Type: application/json
@@ -140,14 +142,18 @@ Content-Type: application/json
 ### - Passed the test
 GET http://localhost:8000/orders
 Content-Type: application/json
+Authorization: 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
 
 ### - Passed the test
 DELETE http://localhost:8000/orders/?list=7&list=8
 Content-Type: application/json
 
+# ------------------------ BOOKING API ------------------------
+
 ### - Passed the test
 POST http://localhost:8000/booking
 Content-Type: application/json
+Authorization: 123123132
 
 {
   "status": "pending",
@@ -185,7 +191,7 @@ Authorization: 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
 GET http://localhost:8000/booking/user/6?range=week
 
 ### - Passed the test
-POST https://melted-farah-artemis-solution-dcbfd4ae.koyeb.app/auth/login
+POST http://localhost:8000/auth/login
 Content-Type: application/json
 
 {

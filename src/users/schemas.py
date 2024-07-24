@@ -4,9 +4,6 @@ from enum import Enum
 from typing import Optional
 import hashlib
 
-from src.booking.schemas import BookingBase, BookingRead
-from src.order.schemas import OrderBase, OrderRead
-
 class SQLModel(SQLModel):
     model_config = ConfigDict(use_enum_values=True)
 
@@ -69,9 +66,9 @@ class UsersRead(UsersBase):
     email : EmailStr
     address : str
     phone_number : str
-    pets : list["PetsRead"] | None = None
-    orders : list["OrderRead"] | None = None
-    booking : list["BookingRead"] | None = None
+    # pets : list["PetsRead"] | None = None
+    # orders : list["OrderRead"] | None = None
+    # booking : list["BookingRead"] | None = None
     password : str = Field(None, exclude=True)
     id : int | None = None
 

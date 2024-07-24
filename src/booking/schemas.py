@@ -48,15 +48,6 @@ class BookingCreate(BookingBase):
     def transform_status_value(cls, v : BookingState):
         if v != BookingState.PENDING:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Status must be pending")
-    @field_validator("reserved_time", mode="before")
-    def validate_time(cls, reserved_time : str):
-        reserved_time = datetime.strptime(reserved_time, "%H:%M:%S")
-        if reserved_time.hour < 8 or reserved_time.hour > 16:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Time must be between 8 AM and 4 PM only")
-        if reserved_time.minute != 0:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Time must be in whole hours only")
-        if reserved_time.second != 0:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Time must be in whole hours only")
     customer_id : int
     service_id : int
     booking_items_link : list[PetsBookingsAssociation]

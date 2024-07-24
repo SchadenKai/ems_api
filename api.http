@@ -185,7 +185,7 @@ Authorization: 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
 GET http://localhost:8000/booking/user/6?range=week
 
 ### - Passed the test
-POST http://localhost:8000/auth/login
+POST https://melted-farah-artemis-solution-dcbfd4ae.koyeb.app/auth/login
 Content-Type: application/json
 
 {

@@ -48,12 +48,6 @@ class BookingCreate(BookingBase):
     def transform_status_value(cls, v : BookingState):
         if v != BookingState.PENDING:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Status must be pending")
-    @model_validator( mode="before")
-    def validate_date(cls, data : "BookingCreate"):
-        reserved_day = date(*map(int, data.get("reserved_day").split("-")))
-        reserved_time = time(*map(int, data.get("reserved_time").split(":")))
-        if datetime.combine(reserved_day, reserved_time) < datetime.now():
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Date must be in the future")
     @field_validator("reserved_time", mode="before")
     def validate_time(cls, reserved_time : str):
         reserved_time = datetime.strptime(reserved_time, "%H:%M:%S")

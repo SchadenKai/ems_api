@@ -6,7 +6,7 @@ from sqlmodel import SQLModel, Field
 from enum import Enum
 from datetime import date, time
 
-from src.users.schemas import PetsRead
+from src.users.schemas import PetsRead, UsersBase, UsersRead
 
 # from src.users.schemas import PetsRead
 
@@ -66,6 +66,7 @@ class BookingRead(BookingBase):
     service : ServicesBase
     booking_items_link : list[PetsBookingsAssociationRead] | None = None
     reserved_date : datetime 
+    customer : "UsersBase"
 
 class BookingUpdate(BookingBase):
     status : Optional[BookingState] = None

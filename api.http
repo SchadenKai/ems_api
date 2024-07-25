@@ -153,6 +153,10 @@ DELETE http://localhost:8000/orders/?list=7&list=8
 Content-Type: application/json
 
 # ------------------------ BOOKING API ------------------------
+###
+GET http://localhost:8000/booking
+Content-Type: application/json
+Authorization: 123123132
 
 ### - Passed the test
 POST http://localhost:8000/booking

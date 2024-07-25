@@ -67,6 +67,7 @@ class BookingRead(BookingBase):
     booking_items_link : list[PetsBookingsAssociationRead] | None = None
     reserved_date : datetime 
     customer : "UsersBase"
+    booking_id : int
 
 class BookingUpdate(BookingBase):
     status : Optional[BookingState] = None

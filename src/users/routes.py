@@ -1,4 +1,4 @@
-from .schemas import PetsCreate, PetsUpdate, UsersCreate, UsersRead, UsersUpdate, Roles, PetsBase
+from .schemas import PetsCreate, PetsRead, PetsUpdate, UsersCreate, UsersRead, UsersUpdate, Roles, PetsBase
 from src.models import Users, Pets
 from fastapi import APIRouter, HTTPException, status, Depends, Query
 from sqlalchemy.exc import SQLAlchemyError
@@ -118,6 +118,18 @@ async def update_pet(
     db_session.commit()
     db_session.refresh(pet)
     return pet
+
+## get all pet of a user
+@users_router.get('/{owner_id}/pets')
+async def get_user_pets(
+    owner_id : int,
+    db_session: Session = Depends(get_session)
+) -> list[PetsRead] :
+    statement = select(Pets).where(Pets.owner_id == owner_id)
+    pets = db_session.exec(statement).all()
+    if not pets:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No pets found")
+    return pets
 
 @users_router.delete('/{id}')
 async def delete_user(

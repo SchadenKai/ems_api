@@ -52,7 +52,7 @@ async def add_booking(
 async def get_all_bookings(
     user_id : int,
     db_session : Session = Depends(get_session),
-    range : Optional[BookingRange] = Query(None)
+    range : BookingRange | None = None
     ) -> List[BookingRead]:
     if range:
         if range == BookingRange.TODAY:
@@ -71,8 +71,10 @@ async def get_all_bookings(
             end_of_month = start_of_month + timedelta(days=30)
             booking_data = db_session.exec(select(Booking).where(Booking.reserved_date >= start_of_month, Booking.reserved_date <= end_of_month, Booking.customer_id == user_id)).all()
             return booking_data
-    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid range")
-
+    else:
+        booking_data = db_session.exec(select(Booking).where(Booking.customer_id == user_id)).all()
+        return booking_data
+    
 
 # ==== Admin-specific access routes ==== #
 

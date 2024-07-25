@@ -81,7 +81,8 @@ async def add_product(
             product_name=req.product_name,
             price=req.price,
             stock=req.stock,
-            description=req.description
+            description=req.description,
+            last_updated=datetime.now()
         )
         if req.photo_url:
             new_product.photo_url = req.photo_url

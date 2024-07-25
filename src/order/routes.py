@@ -157,8 +157,16 @@ async def update_order_status(
 async def get_all_orders(
     limit : Annotated[int, Query(gt=0, le=100)] | None = None,
     status : Optional[OrderState] = None,
+    user_id : Optional[int] = None,
     db_session : Session = Depends(get_session)
     ) -> List[OrderRead]:
+    if user_id:
+        user = db_session.exec(select(Users).where(Users.id == user_id)).first()
+        if not user:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        orders_db = db_session.exec(select(Orders).where(Orders.customer_id == user_id)).all()
+        orders = orders_db[:limit] if limit is not None else orders_db
+        return orders
     if status:
         orders_db = db_session.exec(select(Orders).where(Orders.status == status)).all()
     else:

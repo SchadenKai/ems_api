@@ -140,7 +140,7 @@ GET http://localhost:8000/orders/6
 Content-Type: application/json
 
 ### - Passed the test
-GET http://localhost:8000/orders
+GET http://localhost:8000/orders?user_id=6
 Content-Type: application/json
 Authorization: 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
 
@@ -224,3 +224,7 @@ Content-Type: application/json
 GET http://localhost:8000/booking/services
 Content-Type: application/json
 Authorization: 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
+
+### - Passed the test
+GET http://localhost:8000/generate_default_data
+Content-Type: application/json

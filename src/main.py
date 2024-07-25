@@ -1,10 +1,15 @@
+from datetime import datetime
 import os
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from collections.abc import AsyncGenerator
-from .database import get_sqlalchemy_engine, warm_up_connections
+
+import yaml
+
+from src.models import Products, Services
+from .database import get_session, get_sqlalchemy_engine, warm_up_connections
 from .products.routes import products_router
 from .users.routes import users_router
 from .order.routes import order_router
@@ -44,3 +49,34 @@ app.include_router(users_router)
 app.include_router(order_router)
 app.include_router(booking_router)
 app.include_router(auth_router)
+
+# @app.get("/generate_default_data")
+# async def generate_default_data_from_yaml(
+#     db_session = Depends(get_session)
+# ):
+#     with open('src\default_data.yml', "r") as file:
+#         data = yaml.safe_load(file)
+#     # product_data = [
+#     #     Products(
+#     #     product_name=data.get('product_name'),
+#     #     price=data.get('price'),
+#     #     stock=data.get('stock'),
+#     #     last_updated=datetime.now()
+#     #     ) for data in data.get('products')
+#     # ]
+#     # db_session.add_all(product_data)
+#     # db_session.commit()
+#     # db_session.refresh(product_data)
+#     # print(product_data)
+#     services_data = [
+#         Services(
+#             service_name=data.get('service_name'),
+#             price=data.get('price'),
+#             duration=data.get('duration')
+#         ) for data in data.get('services')
+#     ]
+#     db_session.add_all(services_data)
+#     db_session.commit()
+#     db_session.refresh(services_data)
+#     print(services_data)
+#     return {"message": "Default data generated successfully"}

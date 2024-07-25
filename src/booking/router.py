@@ -114,7 +114,7 @@ async def update_booking_status(
 
 @booking_router.delete("/")
 async def delete_booking(
-    list : List[str],
+    list : List[int],
     db_session : Session = Depends(get_session)
     ) -> BookingRead:
     for booking_id in list:

@@ -229,3 +229,13 @@ Authorization: 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
 ### - Passed the test
 GET http://localhost:8000/generate_default_data
 Content-Type: application/json
+
+###
+PUT http://localhost:8000/users/pets/18
+Content-Type: application/json
+Authorization : 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
+
+{
+  "pet_name" : "Jose Rizal",
+  "type" : "Dog"
+}

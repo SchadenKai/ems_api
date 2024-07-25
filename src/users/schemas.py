@@ -111,3 +111,4 @@ class PetsUpdate(PetsBase):
     age : Optional[int] = None
     type : Optional[PetTypes] = None
     breed : Optional[str] = None
+    gender : Optional[PetsGender] = None

@@ -1,4 +1,4 @@
-from .schemas import PetsCreate, UsersCreate, UsersRead, UsersUpdate, Roles, PetsBase
+from .schemas import PetsCreate, PetsUpdate, UsersCreate, UsersRead, UsersUpdate, Roles, PetsBase
 from src.models import Users, Pets
 from fastapi import APIRouter, HTTPException, status, Depends, Query
 from sqlalchemy.exc import SQLAlchemyError
@@ -53,7 +53,7 @@ async def create_user(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 @users_router.put('/{id}')
-async def update_user(
+async def update_user_and_addpet(
     id : int,
     req : UsersUpdate,
     db_session: Session = Depends(get_session)
@@ -91,6 +91,33 @@ async def update_user(
     db_session.commit()
     db_session.refresh(user)
     return user
+
+## update pet 
+@users_router.put('/pets/{id}')
+async def update_pet(
+    id : int,
+    req : PetsUpdate,
+    db_session: Session = Depends(get_session)
+) -> Pets :
+    statement = select(Pets).where(Pets.pet_id == id)
+    pet = db_session.exec(statement).one_or_none()
+    if pet is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pet not found")
+    
+    if req.pet_name:
+        pet.pet_name = req.pet_name
+    if req.age:
+        pet.age = req.age
+    if req.type:
+        pet.type = req.type
+    if req.breed:
+        pet.breed = req.breed
+    if req.gender:
+        pet.gender = req.gender
+    db_session.add(pet)
+    db_session.commit()
+    db_session.refresh(pet)
+    return pet
 
 @users_router.delete('/{id}')
 async def delete_user(

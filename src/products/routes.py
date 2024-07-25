@@ -47,6 +47,8 @@ async def update_product(
         product_data.price = req.price
     if req.stock:
         product_data.stock = req.stock
+    if req.description:
+        product_data.description = req.description
     product_data.last_updated = datetime.now()
     db_session.add(product_data)
     db_session.commit()
@@ -78,8 +80,11 @@ async def add_product(
         new_product = Products(
             product_name=req.product_name,
             price=req.price,
-            stock=req.stock
+            stock=req.stock,
+            description=req.description
         )
+        if req.photo_url:
+            new_product.photo_url = req.photo_url
         db_session.add(new_product)
         db_session.commit()
         db_session.refresh(new_product)

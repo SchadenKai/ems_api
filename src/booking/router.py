@@ -99,13 +99,14 @@ async def add_service(
 @booking_router.put("/status/{booking_id}")
 async def update_booking_status(
     booking_id : int,
-    booking : BookingUpdate,
+    res : BookingUpdate,
     db_session : Session = Depends(get_session)
     ) -> BookingRead:
+    print(status)
     booking_data = db_session.exec(select(Booking).where(Booking.booking_id == booking_id)).first()
     if not booking_data:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Booking not found")
-    booking_data.status = booking.status
+    booking_data.status = res.status
     db_session.add(booking_data)
     db_session.commit()
     db_session.refresh(booking_data)

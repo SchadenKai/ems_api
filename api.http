@@ -176,6 +176,15 @@ Authorization: 123123132
   ]  
 }
 
+###
+PUT http://localhost:8000/booking/status/5
+Content-Type: application/json
+Authorization: 123123132
+  
+{
+  "status": "confirmed"
+}
+
 ### - Passed the test
 POST http://localhost:8000/booking/services
 Content-Type: application/json

@@ -70,6 +70,6 @@ class BookingRead(BookingBase):
 
 class BookingUpdate(BookingBase):
     status : Optional[BookingState] = None
-    _total_price : Optional[float] = None
-    _booking_items_link : Optional[list[PetsBookingsAssociation]] = None
-    _reserved_date : datetime | None = None
+    total_price : Optional[float] = None
+    booking_items_link : Optional[list[PetsBookingsAssociation]] = None
+    reserved_date : datetime | None = None

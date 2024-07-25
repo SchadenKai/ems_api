@@ -66,7 +66,7 @@ class UsersRead(UsersBase):
     email : EmailStr
     address : str
     phone_number : str
-    # pets : list["PetsRead"] | None = None
+    pets : list["PetsRead"] | None = None
     # orders : list["OrderRead"] | None = None
     # booking : list["BookingRead"] | None = None
     password : str = Field(None, exclude=True)

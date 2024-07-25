@@ -68,8 +68,9 @@ Content-Type: application/json
 }
 
 ### - Passed the test
-GET http://localhost:8000/users
+GET http://localhost:8000/users/41
 Content-Type: application/json
+Authorization : 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
 
 ### - Passed the test
 PUT http://localhost:8000/users/41

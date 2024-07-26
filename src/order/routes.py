@@ -186,8 +186,6 @@ async def delete_order(
             order = db_session.exec(select(Orders).where(Orders.order_id == order_id)).first()
             if not order:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
-            if order.status == OrderState.CONFIRMED:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Order cannot be deleted")
             db_session.delete(order)
         db_session.commit()
         return { "status" : status.HTTP_200_OK, "message" : "Orders deleted successfully" }

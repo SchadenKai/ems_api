@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 from pydantic import EmailStr
 from typing import List, Optional, Annotated
 from src.users.schemas import UsersBase, UsersCreate, UsersRead, UsersUpdate, Roles
-from .schemas import LoginBase, LoginRead
+from .schemas import ChangePassword, LoginBase, LoginRead
 from sqlalchemy.exc import SQLAlchemyError
 import os
 
@@ -55,6 +55,28 @@ async def login(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     if user.password != payload.password:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
+    return {
+        "token" : os.urandom(32).hex(),
+        "user" : user
+    }
+
+### change password
+@auth_router.put("/change-password")
+async def change_password(
+    email : EmailStr,
+    new_password : str,
+    old_password : str,
+    db_session : Session = Depends(get_session)
+    ) -> ChangePassword:
+    user = db_session.exec(select(Users).where(Users.email == email)).first()
+    if old_password != user.password:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    user.password = new_password
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
     return {
         "token" : os.urandom(32).hex(),
         "user" : user

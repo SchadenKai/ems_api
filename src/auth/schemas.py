@@ -19,3 +19,13 @@ class LoginBase(BaseModel):
 class LoginRead(BaseModel):
     token : str
     user : UsersRead
+
+class ChangePassword(BaseModel):
+    @field_validator("old_password", mode="before")
+    def hash_old_password(cls, v : str):
+        return hashlib.sha256(v.encode()).hexdigest()
+    @field_validator("new_password", mode="after")
+    def hash_new_password(cls, v : str):
+        return hashlib.sha256(v.encode()).hexdigest()
+    old_password : str
+    new_password : str

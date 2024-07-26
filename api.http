@@ -281,3 +281,8 @@ Authorization : 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
   "old_password" : "basic123",
   "new_password" : "admin12345678"
 }
+
+###
+GET http://localhost:8000/booking/?date=2024-07-23
+Content-Type: application/json
+Authorization : 123123132

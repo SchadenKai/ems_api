@@ -131,8 +131,15 @@ async def delete_booking(
 @booking_router.get("/")
 async def get_all_bookings(
     db_session : Session = Depends(get_session),
-    range : BookingRange | None = None
+    range : BookingRange | None = None,
+    date : Optional[date] = None
     ) -> List[BookingRead]:
+    if date:
+        booking_data = db_session.exec(select(Booking)).all()
+        booking_filtered = [
+            booking for booking in booking_data if booking.reserved_date.date() == date
+        ]
+        return booking_filtered
     if range:
         if range == BookingRange.TODAY:
             booking_data = db_session.exec(select(Booking)).all()

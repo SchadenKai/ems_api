@@ -147,6 +147,23 @@ async def delete_user(
         "status": status.HTTP_200_OK
     }
 
+## delete pet
+@users_router.delete('/pets/{id}')
+async def delete_pet(
+    id : int,
+    db_session: Session = Depends(get_session)
+) :
+    statement = select(Pets).where(Pets.pet_id == id)
+    pet = db_session.exec(statement).one_or_none()
+    if pet is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pet not found")
+    db_session.delete(pet)
+    db_session.commit()
+    return {
+        "message": f"Pet {id} deleted successfully",
+        "status": status.HTTP_200_OK
+    }
+
 @users_router.post('/pets')
 async def create_pet(
     pet : PetsCreate,

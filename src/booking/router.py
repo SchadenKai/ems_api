@@ -132,12 +132,12 @@ async def delete_booking(
 async def get_all_bookings(
     db_session : Session = Depends(get_session),
     range : BookingRange | None = None,
-    date : Optional[date] = None
+    date_query : Optional[date] = None
     ) -> List[BookingRead]:
-    if date:
+    if date_query:
         booking_data = db_session.exec(select(Booking)).all()
         booking_filtered = [
-            booking for booking in booking_data if booking.reserved_date.date() == date
+            booking for booking in booking_data if booking.reserved_date.date() == date_query
         ]
         return booking_filtered
     if range:

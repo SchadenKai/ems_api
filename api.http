@@ -271,3 +271,13 @@ Authorization : 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
 GET http://localhost:8000/users/6/pets
 Content-Type: application/json
 Authorization : 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
+
+### 
+PUT http://localhost:8000/auth/change-password/41
+Content-Type: application/json
+Authorization : 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
+
+{
+  "old_password" : "basic123",
+  "new_password" : "admin12345678"
+}

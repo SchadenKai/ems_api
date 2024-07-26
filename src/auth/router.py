@@ -61,19 +61,18 @@ async def login(
     }
 
 ### change password
-@auth_router.put("/change-password")
+@auth_router.put("/change-password/{user_id}")
 async def change_password(
-    email : EmailStr,
-    new_password : str,
-    old_password : str,
+    user_id: int,
+    payload : ChangePassword,
     db_session : Session = Depends(get_session)
-    ) -> ChangePassword:
-    user = db_session.exec(select(Users).where(Users.email == email)).first()
-    if old_password != user.password:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
+    ):
+    user = db_session.exec(select(Users).where(Users.id == user_id)).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-    user.password = new_password
+    if payload.old_password != user.password:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
+    user.password = payload.new_password
     db_session.add(user)
     db_session.commit()
     db_session.refresh(user)

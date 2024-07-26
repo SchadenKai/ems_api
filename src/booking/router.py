@@ -121,8 +121,6 @@ async def delete_booking(
         booking_data = db_session.exec(select(Booking).where(Booking.booking_id == booking_id)).first()
         if not booking_data:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Booking not found")
-        if booking_data.status == BookingState.CONFIRMED:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Booking cannot be deleted if it is confirmed")
         db_session.delete(booking_data)
         db_session.commit()
     return {

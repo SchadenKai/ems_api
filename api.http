@@ -154,7 +154,7 @@ Content-Type: application/json
 
 # ------------------------ BOOKING API ------------------------
 ###
-DELETE http://localhost:8000/booking/?list=6&list=8
+DELETE http://localhost:8000/booking/?list=9
 Content-Type: application/json
 Authorization: 123123132
 

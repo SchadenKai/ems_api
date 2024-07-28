@@ -141,22 +141,40 @@ async def update_order_status(
     order_id : int,
     req : OrderUpdate,
     db_session : Session = Depends(get_session)
-    ) -> Orders:
+    ):
     order = db_session.exec(select(Orders).where(Orders.order_id == order_id)).first()
     if not order:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
     if req.status == order.status:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Status must be different")
+    # if the order is cancelled, return the stock back to the product
+    if req.status == OrderState.CANCELLED and order.status == OrderState.CONFIRMED:
+        for product_item in order.product_items_link:
+            product = db_session.exec(select(Products).where(Products.product_id == product_item.product_id)).first()
+            if not product:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+            product.stock += product_item.quantity
+            db_session.add(product)
+    # if the order is confirmed, reduce the stock from the product
+    if req.status == OrderState.CONFIRMED:
+        for product_item in order.product_items_link:
+            product = db_session.exec(select(Products).where(Products.product_id == product_item.product_id)).first()
+            if not product:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+            product.stock -= product_item.quantity
+            db_session.add(product)
     order.status = req.status
     db_session.add(order)
     db_session.commit()
     db_session.refresh(order)
-    return order
+    return {
+        "status" : status.HTTP_200_OK
+    }
 
 @order_router.get('/')
 async def get_all_orders(
     limit : Annotated[int, Query(gt=0, le=100)] | None = None,
-    status : Optional[OrderState] = None,
+    order_status : Optional[OrderState] = None,
     user_id : Optional[int] = None,
     db_session : Session = Depends(get_session)
     ) -> List[OrderRead]:
@@ -167,8 +185,8 @@ async def get_all_orders(
         orders_db = db_session.exec(select(Orders).where(Orders.customer_id == user_id)).all()
         orders = orders_db[:limit] if limit is not None else orders_db
         return orders
-    if status:
-        orders_db = db_session.exec(select(Orders).where(Orders.status == status)).all()
+    if order_status:
+        orders_db = db_session.exec(select(Orders).where(Orders.status == order_status)).all()
     else:
         orders_db = db_session.exec(select(Orders)).all() 
     orders = orders_db[:limit] if limit is not None else orders_db

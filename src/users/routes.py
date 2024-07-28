@@ -26,7 +26,6 @@ async def create_user(
     req : UsersCreate,
     db_session: Session = Depends(get_session)
 ) -> UsersRead:
-    print(req)
     try: 
         user = Users(
             full_name=req.full_name,

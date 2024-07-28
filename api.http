@@ -34,6 +34,7 @@ Content-Type: application/json
 ### - Passed the test
 POST http://localhost:8000/users
 Content-Type: application/json
+Authorization: 123123
 
 {
   "full_name": "Admin Access",

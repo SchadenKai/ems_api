@@ -1,3 +1,4 @@
+from pydantic import EmailStr
 from src.users.schemas import UsersBase, PetsBase
 from sqlmodel import Field, Relationship, SQLModel
 from src.order.schemas import OrderBase, OrderProductAssociationBase
@@ -29,6 +30,7 @@ class OrderProductAssociation(OrderProductAssociationBase, table=True):
 
 class Users(UsersBase, table=True):
     id : int | None = Field(default=None, primary_key=True)
+    email : EmailStr = Field(unique=True)
 
     pets : list["Pets"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="owner")
     orders : list["Orders"] = Relationship(sa_relationship_kwargs={"cascade" : "all, delete"}, back_populates="customer")

@@ -94,7 +94,7 @@ Content-Type: application/json
 Authorization : 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
 
 ### - Passed the test
-DELETE http://localhost:8000/users/92
+DELETE http://localhost:8000/users/45
 Content-Type: application/json
 Authorization : 6a9d71d5b5fdcc350aebf3af409dc23514d4f45525cd23eddd45b2ad9e015632
 

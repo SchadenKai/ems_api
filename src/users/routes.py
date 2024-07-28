@@ -27,6 +27,9 @@ async def create_user(
     db_session: Session = Depends(get_session)
 ) -> UsersRead:
     try: 
+        email_exists = db_session.exec(select(Users).where(Users.email == req.email)).first()
+        if email_exists:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exists")
         user = Users(
             full_name=req.full_name,
             role=req.role,
@@ -173,6 +176,9 @@ async def create_pet(
     db_user = db_session.exec(select(Users).where(Users.id == pet.owner_id)).first()
     if not db_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    for db_pet in db_user.pets:
+        if pet.pet_name == db_pet.pet_name and pet.age == db_pet.age and pet.type == db_pet.type and pet.gender == db_pet.gender:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Pet already exists")
     pet = Pets(
         pet_name=pet.pet_name,
         age=pet.age,

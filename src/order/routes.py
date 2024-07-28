@@ -79,6 +79,8 @@ async def place_order(
             "product_price" : product.price,
             "product_quantity" : product_items.quantity
         })
+        # reduce the stock from the product
+        product.stock -= product_items.quantity
         link = OrderProductAssociation(
             product_id=product_items.product_id,
             order_id=order_data.order_id,
@@ -154,14 +156,6 @@ async def update_order_status(
             if not product:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
             product.stock += product_item.quantity
-            db_session.add(product)
-    # if the order is confirmed, reduce the stock from the product
-    if req.status == OrderState.CONFIRMED:
-        for product_item in order.product_items_link:
-            product = db_session.exec(select(Products).where(Products.product_id == product_item.product_id)).first()
-            if not product:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
-            product.stock -= product_item.quantity
             db_session.add(product)
     order.status = req.status
     db_session.add(order)

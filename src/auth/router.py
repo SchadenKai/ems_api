@@ -32,7 +32,8 @@ async def register(
                     age=pet.age,
                     type=pet.type,
                     breed=pet.breed,
-                    owner=user
+                    owner=user,
+                    gender=pet.gender
                 )
                 db_session.add(pet_obj)
         db_session.add(user)

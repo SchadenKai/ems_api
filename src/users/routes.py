@@ -25,7 +25,8 @@ async def get_user_profile(
 async def create_user(
     req : UsersCreate,
     db_session: Session = Depends(get_session)
-) -> Users:
+) -> UsersRead:
+    print(req)
     try: 
         user = Users(
             full_name=req.full_name,

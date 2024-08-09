@@ -65,7 +65,9 @@ async def place_order(
         quantity=req.quantity,
         total_price=req.total_price,
         customer_id=req.customer_id,
-        order_date=req.order_date
+        order_date=req.order_date,
+        gcash_number=req.gcash_number,
+        gcash_reference_number=req.gcash_reference_number
     )
     db_session.add(order_data)
     db_session.commit()

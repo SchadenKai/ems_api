@@ -22,6 +22,8 @@ class OrderBase(SQLModel):
     status : OrderState | None = Field(default=OrderState.PENDING)
     quantity : Annotated[int, Field(gt=0)] 
     total_price : Annotated[float, Field(gt=0)]
+    gcash_reference_number : Optional[str] = None
+    gcash_number : Optional[str] = None
 
 class OrderProductAssociationBase(SQLModel):
     product_id : int

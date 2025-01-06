@@ -194,7 +194,7 @@ async def create_pet(
 
 # ==== Admin-specific access routes ==== #
 
-@users_router.get('/')
+@users_router.get('')
 async def get_all_users(
     role : Roles | None = None,
     db_session: Session = Depends(get_session)
@@ -203,21 +203,5 @@ async def get_all_users(
     db_results = db_session.exec(statement).all()
     if not db_results:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No users found")
-    db_results = [
-        UsersRead(
-        full_name=user.full_name,
-        role=user.role,
-        email=user.email,
-        address=user.address,
-        phone_number=user.phone_number,
-        pets = [
-            PetsBase(
-            pet_name=pet.pet_name,
-            age=pet.age,
-            type=pet.type,
-            breed=pet.breed
-            ) for pet in user.pets
-        ]
-        ) for user in db_results
-    ]        
+          
     return db_results
